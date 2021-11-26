@@ -2114,37 +2114,140 @@ function () {
       return sendTrc20;
     }()
   }, {
-    key: "getAccount",
+    key: "sendTrc721",
     value: function () {
-      var _getAccount = asyncToGenerator_default()(
+      var _sendTrc3 = asyncToGenerator_default()(
       /*#__PURE__*/
       regenerator_default.a.mark(function _callee22(replyAction, params) {
-        var path, _params$confirm, confirm, address;
-
+        var fromAddress, index, toAddress, amount, id, decimals, TokenName, unSignTransaction, signedTransaction, broadcast;
         return regenerator_default.a.wrap(function _callee22$(_context22) {
           while (1) {
             switch (_context22.prev = _context22.next) {
               case 0:
-                path = params.path, _params$confirm = params.confirm, confirm = _params$confirm === void 0 ? false : _params$confirm;
+                fromAddress = params.fromAddress, index = params.index, toAddress = params.toAddress, amount = params.amount, id = params.id, decimals = params.decimals, TokenName = params.TokenName;
+                _context22.next = 3;
+                return this.isCorrectAddress(replyAction, fromAddress, index);
 
-                if (path) {
-                  _context22.next = 3;
+              case 3:
+                if (_context22.sent) {
+                  _context22.next = 5;
+                  break;
+                }
+
+                return _context22.abrupt("return");
+
+              case 5:
+                _context22.next = 7;
+                return tronWeb.transactionBuilder.triggerSmartContract(tronWeb.address.toHex(id), 'transferFrom(address,address,uint256)', 40000000, 0, [{
+                  type: 'address',
+                  value: tronWeb.address.toHex(fromAddress)
+                }, {
+                  type: 'address',
+                  value: tronWeb.address.toHex(toAddress)
+                }, {
+                  type: 'uint256',
+                  value: amount
+                }], tronWeb.address.toHex(fromAddress));
+
+              case 7:
+                unSignTransaction = _context22.sent;
+
+                if (!(unSignTransaction.transaction !== undefined)) {
+                  _context22.next = 23;
+                  break;
+                }
+
+                unSignTransaction = unSignTransaction.transaction;
+                unSignTransaction.extra = {
+                  to: toAddress,
+                  decimals: decimals,
+                  token_name: TokenName,
+                  amount: amount
+                };
+                _context22.next = 13;
+                return tronWeb.trx.sign(unSignTransaction, index)["catch"](function (error) {
+                  return {
+                    result: error ? false : true,
+                    error: error
+                  };
+                });
+
+              case 13:
+                signedTransaction = _context22.sent;
+
+                if (!(signedTransaction.hasOwnProperty('result') && !signedTransaction.result)) {
+                  _context22.next = 18;
                   break;
                 }
 
                 return _context22.abrupt("return", this.sendMessageToExtension({
+                  success: false,
+                  error: signedTransaction.error
+                }, replyAction));
+
+              case 18:
+                _context22.next = 20;
+                return tronWeb.trx.sendRawTransaction(signedTransaction);
+
+              case 20:
+                broadcast = _context22.sent;
+
+                if (!broadcast.result) {
+                  _context22.next = 23;
+                  break;
+                }
+
+                return _context22.abrupt("return", this.sendMessageToExtension({
+                  success: true,
+                  signedTransaction: signedTransaction
+                }, replyAction));
+
+              case 23:
+              case "end":
+                return _context22.stop();
+            }
+          }
+        }, _callee22, this);
+      }));
+
+      function sendTrc721(_x28, _x29) {
+        return _sendTrc3.apply(this, arguments);
+      }
+
+      return sendTrc721;
+    }()
+  }, {
+    key: "getAccount",
+    value: function () {
+      var _getAccount = asyncToGenerator_default()(
+      /*#__PURE__*/
+      regenerator_default.a.mark(function _callee23(replyAction, params) {
+        var path, _params$confirm, confirm, address;
+
+        return regenerator_default.a.wrap(function _callee23$(_context23) {
+          while (1) {
+            switch (_context23.prev = _context23.next) {
+              case 0:
+                path = params.path, _params$confirm = params.confirm, confirm = _params$confirm === void 0 ? false : _params$confirm;
+
+                if (path) {
+                  _context23.next = 3;
+                  break;
+                }
+
+                return _context23.abrupt("return", this.sendMessageToExtension({
                   address: false,
                   error: 'path is invalid',
                   success: false
                 }, replyAction));
 
               case 3:
-                _context22.prev = 3;
-                _context22.next = 6;
+                _context23.prev = 3;
+                _context23.next = 6;
                 return this.getAddress(path, confirm);
 
               case 6:
-                address = _context22.sent;
+                address = _context23.sent;
 
                 if (address && typeof address === 'string') {
                   this.sendMessageToExtension({
@@ -2159,27 +2262,27 @@ function () {
                   }, replyAction);
                 }
 
-                _context22.next = 13;
+                _context23.next = 13;
                 break;
 
               case 10:
-                _context22.prev = 10;
-                _context22.t0 = _context22["catch"](3);
+                _context23.prev = 10;
+                _context23.t0 = _context23["catch"](3);
                 this.sendMessageToExtension({
                   address: false,
-                  error: _context22.t0.message,
+                  error: _context23.t0.message,
                   success: false
                 }, replyAction);
 
               case 13:
               case "end":
-                return _context22.stop();
+                return _context23.stop();
             }
           }
-        }, _callee22, this, [[3, 10]]);
+        }, _callee23, this, [[3, 10]]);
       }));
 
-      function getAccount(_x28, _x29) {
+      function getAccount(_x30, _x31) {
         return _getAccount.apply(this, arguments);
       }
 
@@ -2223,7 +2326,7 @@ regenerator_default.a.mark(function _callee2() {
                   switch (_context.prev = _context.next) {
                     case 0:
                       if (!(e && e.data && e.data.target === 'LEDGER-IFRAME')) {
-                        _context.next = 29;
+                        _context.next = 32;
                         break;
                       }
 
@@ -2231,7 +2334,7 @@ regenerator_default.a.mark(function _callee2() {
                       _e$data = e.data, action = _e$data.action, data = _e$data.data;
                       replyAction = "".concat(action, "-reply");
                       _context.t0 = action;
-                      _context.next = _context.t0 === 'connect ledger' ? 7 : _context.t0 === 'connect ledger multi' ? 10 : _context.t0 === 'cancel transaction' ? 13 : _context.t0 === 'sign transaction' ? 14 : _context.t0 === 'send trx' ? 17 : _context.t0 === 'send trc10' ? 20 : _context.t0 === 'send trc20' ? 23 : _context.t0 === 'getAccount' ? 26 : 29;
+                      _context.next = _context.t0 === 'connect ledger' ? 7 : _context.t0 === 'connect ledger multi' ? 10 : _context.t0 === 'cancel transaction' ? 13 : _context.t0 === 'sign transaction' ? 14 : _context.t0 === 'send trx' ? 17 : _context.t0 === 'send trc10' ? 20 : _context.t0 === 'send trc20' ? 23 : _context.t0 === 'send trc721' ? 26 : _context.t0 === 'getAccount' ? 29 : 32;
                       break;
 
                     case 7:
@@ -2239,54 +2342,61 @@ regenerator_default.a.mark(function _callee2() {
                       return bridge.checkForConnection(replyAction, true);
 
                     case 9:
-                      return _context.abrupt("break", 29);
+                      return _context.abrupt("break", 32);
 
                     case 10:
                       _context.next = 12;
                       return bridge.checkForConnectionMultiAddress(replyAction, true);
 
                     case 12:
-                      return _context.abrupt("break", 29);
+                      return _context.abrupt("break", 32);
 
                     case 13:
-                      return _context.abrupt("break", 29);
+                      return _context.abrupt("break", 32);
 
                     case 14:
                       _context.next = 16;
                       return bridge.signCommonTransaction(replyAction, data);
 
                     case 16:
-                      return _context.abrupt("break", 29);
+                      return _context.abrupt("break", 32);
 
                     case 17:
                       _context.next = 19;
                       return bridge.sendTrx(replyAction, data);
 
                     case 19:
-                      return _context.abrupt("break", 29);
+                      return _context.abrupt("break", 32);
 
                     case 20:
                       _context.next = 22;
                       return bridge.sendTrc10(replyAction, data);
 
                     case 22:
-                      return _context.abrupt("break", 29);
+                      return _context.abrupt("break", 32);
 
                     case 23:
                       _context.next = 25;
                       return bridge.sendTrc20(replyAction, data);
 
                     case 25:
-                      return _context.abrupt("break", 29);
+                      return _context.abrupt("break", 32);
 
                     case 26:
                       _context.next = 28;
-                      return bridge.getAccount(replyAction, data);
+                      return bridge.sendTrc721(replyAction, data);
 
                     case 28:
-                      return _context.abrupt("break", 29);
+                      return _context.abrupt("break", 32);
 
                     case 29:
+                      _context.next = 31;
+                      return bridge.getAccount(replyAction, data);
+
+                    case 31:
+                      return _context.abrupt("break", 32);
+
+                    case 32:
                     case "end":
                       return _context.stop();
                   }
@@ -5977,7 +6087,7 @@ function bin2String(array) {
   return String.fromCharCode.apply(String, array);
 }
 
-//æ¯”è¾ƒä¸¤ä¸ªbyteArrayæ˜¯å¦ç›¸ç­‰
+//比较两个byteArray是否相等
 function arrayEquals(array1, array2) {
   if (array1.length != array2.length) {
     return false;
@@ -5991,7 +6101,7 @@ function arrayEquals(array1, array2) {
   return true;
 }
 
-//ä»Žbase64å­—ç¬¦ä¸²ä¸­è§£æžTransActionå¯¹è±¡
+//从base64字符串中解析TransAction对象
 function getTransActionFromBase64String(base64String) {
   var bytesDecode = base64DecodeFromString(base64String);
   var transaction = proto.protocol.Transaction.deserializeBinary(bytesDecode);
@@ -6000,7 +6110,7 @@ function getTransActionFromBase64String(base64String) {
 }
 
 //Return a list contains contract object
-//ä»ŽTransActionå¯¹è±¡ä¸­èŽ·å¾—åˆçº¦åˆ—è¡¨
+//从TransAction对象中获得合约列表
 function getContractListFromTransaction(transaction) {
   var raw = transaction.getRawData();
   var type = raw.getType();
@@ -6083,7 +6193,7 @@ function getContractListFromTransaction(transaction) {
   return array;
 }
 
-//å­—ç¬¦ä¸²è½¬byteArrayæ•°æ®æ ¼å¼
+//字符串转byteArray数据格式
 function stringToBytes(str) {
   var bytes = new Array();
   var len, c;
@@ -6110,7 +6220,7 @@ function stringToBytes(str) {
 
 }
 
-//byteArrayæ•°æ®æ ¼å¼è½¬å­—ç¬¦ä¸²
+//byteArray数据格式转字符串
 function bytesToString(arr) {
   if (typeof arr === 'string') {
     return arr;
@@ -6173,7 +6283,7 @@ function isHexChar(c) {
 
 /* Convert HEX string to byte array */
 
-//16è¿›åˆ¶çš„ASCIIå­—ç¬¦ä¸²è½¬ä¸ºbyteArrayæ ¼å¼ã€‚
+//16进制的ASCII字符串转为byteArray格式。
 function hexStr2byteArray(str) {
   var byteArray = Array();
   var d = 0;
@@ -6207,7 +6317,7 @@ function byte2hexStr(byte) {
 
 /* Convert byte arry to HEX string */
 
-//byteArrayæ ¼å¼æ•°æ®è½¬ä¸º16è¿›åˆ¶çš„ASCIIå­—ç¬¦ä¸²ã€‚
+//byteArray格式数据转为16进制的ASCII字符串。
 function byteArray2hexStr(byteArray) {
   var str = "";
   for (var i = 0; i < (byteArray.length - 1); i++) {
@@ -6217,7 +6327,7 @@ function byteArray2hexStr(byteArray) {
   return str;
 }
 
-//ä»Žbase64å­—ç¬¦ä¸²ä¸­è§£ç å‡ºåŽŸæ–‡ï¼Œæ ¼å¼ä¸ºbyteArrayæ ¼å¼
+//从base64字符串中解码出原文，格式为byteArray格式
 function base64DecodeFromString(string64) {
   var b = new Base64();
   var decodeBytes = b.decodeToByteArray(string64);
@@ -6225,7 +6335,7 @@ function base64DecodeFromString(string64) {
 }
 
 //return baset64 String
-//å°†byteArrayæ ¼å¼æ•°æ®ç¼–ç ä¸ºbase64å­—ç¬¦ä¸²
+//将byteArray格式数据编码为base64字符串
 function base64EncodeToString(bytes) {
   // var string = bytesToString(bytes);
   var b = new Base64();
@@ -35849,7 +35959,7 @@ function buildAssetIssue(options) {
  * @param address From which address to freze
  * @param amount The amount of TRX to freeze
  * @param duration Duration in days
- * @param andwith or energy   Bandwidth Point = 0ï¼ŒEnergy = 1
+ * @param andwith or energy   Bandwidth Point = 0，Energy = 1
  */
 function buildFreezeBalance(address, amount, duration, resource, receiver) {
   let contract = new FreezeBalanceContract();
