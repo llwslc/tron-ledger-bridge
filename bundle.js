@@ -751,7 +751,8 @@ function () {
     key: "getPath",
     value: function getPath() {
       var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-      return "44'/195'/" + index + "'/0/0";
+      var addressIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      return "44'/195'/" + index + "'/0/" + addressIndex;
     }
   }, {
     key: "checkForConnection",
@@ -1465,6 +1466,7 @@ function () {
           /*#__PURE__*/
           regenerator_default.a.mark(function _callee16(transaction) {
             var accountIndex,
+                addressIndex,
                 transactionObj,
                 rawDataHex,
                 raw,
@@ -1493,20 +1495,21 @@ function () {
                 switch (_context16.prev = _context16.next) {
                   case 0:
                     accountIndex = _args16.length > 1 && _args16[1] !== undefined ? _args16[1] : 0;
-                    _context16.prev = 1;
+                    addressIndex = _args16.length > 2 && _args16[2] !== undefined ? _args16[2] : 0;
+                    _context16.prev = 2;
 
                     if (!(typeof transaction === 'string')) {
-                      _context16.next = 6;
+                      _context16.next = 7;
                       break;
                     }
 
-                    _context16.next = 5;
-                    return _this7.signPersonalMessage(transaction, _this7.getPath(accountIndex));
-
-                  case 5:
-                    return _context16.abrupt("return", _context16.sent);
+                    _context16.next = 6;
+                    return _this7.signPersonalMessage(transaction, _this7.getPath(accountIndex, addressIndex));
 
                   case 6:
+                    return _context16.abrupt("return", _context16.sent);
+
+                  case 7:
                     transactionObj = transactionJsonToProtoBuf(transaction);
                     rawDataHex = Object(bytes["byteArray2hexStr"])(transactionObj.getRawData().serializeBinary());
                     raw = transactionObj.getRawData();
@@ -1516,35 +1519,35 @@ function () {
                     extra = {};
                     console.log('contractType', contractType);
                     _context16.t0 = contractType;
-                    _context16.next = _context16.t0 === 1 ? 17 : _context16.t0 === 2 ? 19 : _context16.t0 === 5 ? 29 : _context16.t0 === 16 ? 31 : _context16.t0 === 17 ? 33 : _context16.t0 === 18 ? 35 : _context16.t0 === 41 ? 37 : _context16.t0 === 42 ? 45 : _context16.t0 === 43 ? 51 : _context16.t0 === 44 ? 57 : _context16.t0 === 31 ? 62 : _context16.t0 === 46 ? 64 : 66;
+                    _context16.next = _context16.t0 === 1 ? 18 : _context16.t0 === 2 ? 20 : _context16.t0 === 5 ? 30 : _context16.t0 === 16 ? 32 : _context16.t0 === 17 ? 34 : _context16.t0 === 18 ? 36 : _context16.t0 === 41 ? 38 : _context16.t0 === 42 ? 46 : _context16.t0 === 43 ? 52 : _context16.t0 === 44 ? 58 : _context16.t0 === 31 ? 63 : _context16.t0 === 46 ? 65 : 67;
                     break;
 
-                  case 17:
+                  case 18:
                     //Transfer
                     if (transaction.raw_data.data) {
                       extra.note = transaction.raw_data.data;
                     }
 
-                    return _context16.abrupt("break", 66);
+                    return _context16.abrupt("break", 67);
 
-                  case 19:
+                  case 20:
                     // Transfer Assets
                     ID = tronWeb.toUtf8(transaction.raw_data.contract[0].parameter.value.asset_name); // get token info
 
-                    _context16.next = 22;
+                    _context16.next = 23;
                     return _this7.getTokenExtraInfo(transaction.raw_data.contract[0].parameter.value.asset_name);
 
-                  case 22:
+                  case 23:
                     extra = _context16.sent;
 
                     if (transaction.raw_data.data) {
                       extra.note = transaction.raw_data.data;
                     }
 
-                    _context16.next = 26;
+                    _context16.next = 27;
                     return _this7.getLedgerTokenInfo(ID);
 
-                  case 26:
+                  case 27:
                     tokenObj = _context16.sent;
 
                     if (tokenObj.message) {
@@ -1552,38 +1555,38 @@ function () {
                     } // tokenInfo.push(this.getLedgerTokenInfo(ID).message);
 
 
-                    return _context16.abrupt("break", 66);
+                    return _context16.abrupt("break", 67);
 
-                  case 29:
+                  case 30:
                     //Create Witness
                     extra = transaction.extra || {};
-                    return _context16.abrupt("break", 66);
+                    return _context16.abrupt("break", 67);
 
-                  case 31:
+                  case 32:
                     //Create Proposal
                     extra = transaction.extra || {};
-                    return _context16.abrupt("break", 66);
+                    return _context16.abrupt("break", 67);
 
-                  case 33:
+                  case 34:
                     //Approve Proposal
                     extra = transaction.extra || {};
-                    return _context16.abrupt("break", 66);
+                    return _context16.abrupt("break", 67);
 
-                  case 35:
+                  case 36:
                     //Delete Proposal
                     extra = transaction.extra || {};
-                    return _context16.abrupt("break", 66);
+                    return _context16.abrupt("break", 67);
 
-                  case 37:
-                    _context16.next = 39;
+                  case 38:
+                    _context16.next = 40;
                     return _this7.getTokenExtraInfo(transaction.raw_data.contract[0].parameter.value.first_token_id);
 
-                  case 39:
+                  case 40:
                     token1 = _context16.sent;
-                    _context16.next = 42;
+                    _context16.next = 43;
                     return _this7.getTokenExtraInfo(transaction.raw_data.contract[0].parameter.value.second_token_id);
 
-                  case 42:
+                  case 43:
                     token2 = _context16.sent;
 
                     if (token1 !== undefined && token2 !== undefined) {
@@ -1597,9 +1600,9 @@ function () {
                       if (token2.id !== 0) tokenInfo.push(_this7.getLedgerTokenInfo(token2.id).message);
                     }
 
-                    return _context16.abrupt("break", 66);
+                    return _context16.abrupt("break", 67);
 
-                  case 45:
+                  case 46:
                     //ExchangeInjectContract
                     exchangeDepositID = transaction.raw_data.contract[0].parameter.value.exchange_id;
                     exchangeDeposit = _this7.getLedgerExchangeInfo(exchangeDepositID);
@@ -1611,9 +1614,9 @@ function () {
                       decimals: exchangeDepositToken.decimals
                     };
                     if (exchangeDepositToken.id !== 0) tokenInfo.push(exchangeDepositToken.message);
-                    return _context16.abrupt("break", 66);
+                    return _context16.abrupt("break", 67);
 
-                  case 51:
+                  case 52:
                     //ExchangeWithdrawContract
                     exchangeWithdrawID = transaction.raw_data.contract[0].parameter.value.exchange_id;
                     exchangeWithdraw = _this7.getLedgerExchangeInfo(exchangeWithdrawID);
@@ -1625,9 +1628,9 @@ function () {
                       decimals: exchangeWithdrawToken.decimals
                     };
                     if (exchangeWithdrawToken.id !== 0) tokenInfo.push(exchangeWithdrawToken.message);
-                    return _context16.abrupt("break", 66);
+                    return _context16.abrupt("break", 67);
 
-                  case 57:
+                  case 58:
                     //ExchangeTransactionContract
                     exchangeID = transaction.raw_data.contract[0].parameter.value.exchange_id;
                     exchange = _this7.getLedgerExchangeInfo(exchangeID); // get exchange info
@@ -1639,27 +1642,27 @@ function () {
                       action: transaction.raw_data.contract[0].parameter.value.token_id === exchange.firstToken ? "Sell" : "Buy"
                     };
                     tokenInfo.push(exchange.message);
-                    return _context16.abrupt("break", 66);
+                    return _context16.abrupt("break", 67);
 
-                  case 62:
+                  case 63:
                     //Trigger Smart Contract
                     extra = transaction.extra || {};
-                    return _context16.abrupt("break", 66);
+                    return _context16.abrupt("break", 67);
 
-                  case 64:
+                  case 65:
                     extra = transaction.extra || {};
-                    return _context16.abrupt("break", 66);
+                    return _context16.abrupt("break", 67);
 
-                  case 66:
+                  case 67:
                     extra.hash = transaction.txID; //const ledgerBridge = new LedgerBridge();
 
-                    _context16.next = 69;
+                    _context16.next = 70;
                     return _this7.signTransaction({
                       hex: transaction.raw_data_hex || rawDataHex,
                       info: tokenInfo
-                    }, _this7.getPath(accountIndex));
+                    }, _this7.getPath(accountIndex, addressIndex));
 
-                  case 69:
+                  case 70:
                     signedResponse = _context16.sent;
 
                     // transaction.signature = [signedResponse];
@@ -1671,21 +1674,21 @@ function () {
 
                     return _context16.abrupt("return", transaction);
 
-                  case 74:
-                    _context16.prev = 74;
-                    _context16.t1 = _context16["catch"](1);
+                  case 75:
+                    _context16.prev = 75;
+                    _context16.t1 = _context16["catch"](2);
                     console.log("error:", _context16.t1.message);
 
                     if (!/Too many bytes to encode/.test(_context16.t1.message)) {
-                      _context16.next = 92;
+                      _context16.next = 93;
                       break;
                     }
 
-                    _context16.prev = 78;
-                    _context16.next = 81;
-                    return _this7.signTransactionHash(_this7.getPath(accountIndex), transaction.txID);
+                    _context16.prev = 79;
+                    _context16.next = 82;
+                    return _this7.signTransactionHash(_this7.getPath(accountIndex, addressIndex), transaction.txID);
 
-                  case 81:
+                  case 82:
                     _signedResponse = _context16.sent;
 
                     if (Array.isArray(transaction.signature)) {
@@ -1696,25 +1699,25 @@ function () {
 
                     return _context16.abrupt("return", transaction);
 
-                  case 86:
-                    _context16.prev = 86;
-                    _context16.t2 = _context16["catch"](78);
+                  case 87:
+                    _context16.prev = 87;
+                    _context16.t2 = _context16["catch"](79);
                     console.log("e :", _context16.t2);
                     throw _context16.t2.message;
 
-                  case 90:
-                    _context16.next = 93;
+                  case 91:
+                    _context16.next = 94;
                     break;
 
-                  case 92:
+                  case 93:
                     throw _context16.t1.message;
 
-                  case 93:
+                  case 94:
                   case "end":
                     return _context16.stop();
                 }
               }
-            }, _callee16, null, [[1, 74], [78, 86]]);
+            }, _callee16, null, [[2, 75], [79, 87]]);
           }));
 
           return function (_x16) {
@@ -1728,14 +1731,14 @@ function () {
     value: function () {
       var _isCorrectAddress = asyncToGenerator_default()(
       /*#__PURE__*/
-      regenerator_default.a.mark(function _callee17(replyAction, fromAddress, index) {
+      regenerator_default.a.mark(function _callee17(replyAction, fromAddress, index, addressIndex) {
         var targetAddress;
         return regenerator_default.a.wrap(function _callee17$(_context17) {
           while (1) {
             switch (_context17.prev = _context17.next) {
               case 0:
                 _context17.next = 2;
-                return this.getAddress(this.getPath(index));
+                return this.getAddress(this.getPath(index, addressIndex));
 
               case 2:
                 targetAddress = _context17.sent;
@@ -1762,7 +1765,7 @@ function () {
         }, _callee17, this);
       }));
 
-      function isCorrectAddress(_x17, _x18, _x19) {
+      function isCorrectAddress(_x17, _x18, _x19, _x20) {
         return _isCorrectAddress.apply(this, arguments);
       }
 
@@ -1774,14 +1777,14 @@ function () {
       var _signCommonTransaction = asyncToGenerator_default()(
       /*#__PURE__*/
       regenerator_default.a.mark(function _callee18(replyAction, params) {
-        var fromAddress, index, transaction, signedTransaction;
+        var fromAddress, index, transaction, addressIndex, signedTransaction;
         return regenerator_default.a.wrap(function _callee18$(_context18) {
           while (1) {
             switch (_context18.prev = _context18.next) {
               case 0:
-                fromAddress = params.fromAddress, index = params.index, transaction = params.transaction;
+                fromAddress = params.fromAddress, index = params.index, transaction = params.transaction, addressIndex = params.addressIndex;
                 _context18.next = 3;
-                return this.isCorrectAddress(replyAction, fromAddress, index);
+                return this.isCorrectAddress(replyAction, fromAddress, index, addressIndex);
 
               case 3:
                 if (_context18.sent) {
@@ -1799,7 +1802,7 @@ function () {
 
                 console.log('transaction: ', transaction);
                 _context18.next = 9;
-                return tronWeb.trx.sign(transaction, index)["catch"](function (error) {
+                return tronWeb.trx.sign(transaction, index, addressIndex)["catch"](function (error) {
                   return {
                     result: !error,
                     error: error
@@ -1845,7 +1848,7 @@ function () {
         }, _callee18, this);
       }));
 
-      function signCommonTransaction(_x20, _x21) {
+      function signCommonTransaction(_x21, _x22) {
         return _signCommonTransaction.apply(this, arguments);
       }
 
@@ -1857,14 +1860,14 @@ function () {
       var _sendTrx = asyncToGenerator_default()(
       /*#__PURE__*/
       regenerator_default.a.mark(function _callee19(replyAction, params) {
-        var fromAddress, index, toAddress, amount, transaction, signedTransactionTrx, broadcast;
+        var fromAddress, index, toAddress, amount, addressIndex, transaction, signedTransactionTrx, broadcast;
         return regenerator_default.a.wrap(function _callee19$(_context19) {
           while (1) {
             switch (_context19.prev = _context19.next) {
               case 0:
-                fromAddress = params.fromAddress, index = params.index, toAddress = params.toAddress, amount = params.amount;
+                fromAddress = params.fromAddress, index = params.index, toAddress = params.toAddress, amount = params.amount, addressIndex = params.addressIndex;
                 _context19.next = 3;
-                return this.isCorrectAddress(replyAction, fromAddress, index);
+                return this.isCorrectAddress(replyAction, fromAddress, index, addressIndex);
 
               case 3:
                 if (_context19.sent) {
@@ -1881,7 +1884,7 @@ function () {
               case 7:
                 transaction = _context19.sent;
                 _context19.next = 10;
-                return tronWeb.trx.sign(transaction, index)["catch"](function (error) {
+                return tronWeb.trx.sign(transaction, index, addressIndex)["catch"](function (error) {
                   return {
                     result: !error,
                     error: error
@@ -1926,7 +1929,7 @@ function () {
         }, _callee19, this);
       }));
 
-      function sendTrx(_x22, _x23) {
+      function sendTrx(_x23, _x24) {
         return _sendTrx.apply(this, arguments);
       }
 
@@ -1938,14 +1941,14 @@ function () {
       var _sendTrc = asyncToGenerator_default()(
       /*#__PURE__*/
       regenerator_default.a.mark(function _callee20(replyAction, params) {
-        var fromAddress, index, toAddress, amount, id, transaction, signedTransaction10, broadcast;
+        var fromAddress, index, toAddress, amount, id, addressIndex, transaction, signedTransaction10, broadcast;
         return regenerator_default.a.wrap(function _callee20$(_context20) {
           while (1) {
             switch (_context20.prev = _context20.next) {
               case 0:
-                fromAddress = params.fromAddress, index = params.index, toAddress = params.toAddress, amount = params.amount, id = params.id;
+                fromAddress = params.fromAddress, index = params.index, toAddress = params.toAddress, amount = params.amount, id = params.id, addressIndex = params.addressIndex;
                 _context20.next = 3;
-                return this.isCorrectAddress(replyAction, fromAddress, index);
+                return this.isCorrectAddress(replyAction, fromAddress, index, addressIndex);
 
               case 3:
                 if (_context20.sent) {
@@ -1962,7 +1965,7 @@ function () {
               case 7:
                 transaction = _context20.sent;
                 _context20.next = 10;
-                return tronWeb.trx.sign(transaction, index)["catch"](function (error) {
+                return tronWeb.trx.sign(transaction, index, addressIndex)["catch"](function (error) {
                   return {
                     result: !error,
                     error: error
@@ -2007,7 +2010,7 @@ function () {
         }, _callee20, this);
       }));
 
-      function sendTrc10(_x24, _x25) {
+      function sendTrc10(_x25, _x26) {
         return _sendTrc.apply(this, arguments);
       }
 
@@ -2019,14 +2022,14 @@ function () {
       var _sendTrc2 = asyncToGenerator_default()(
       /*#__PURE__*/
       regenerator_default.a.mark(function _callee21(replyAction, params) {
-        var fromAddress, index, toAddress, amount, id, decimals, TokenName, unSignTransaction, signedTransaction, broadcast;
+        var fromAddress, index, toAddress, amount, id, decimals, TokenName, addressIndex, unSignTransaction, signedTransaction, broadcast;
         return regenerator_default.a.wrap(function _callee21$(_context21) {
           while (1) {
             switch (_context21.prev = _context21.next) {
               case 0:
-                fromAddress = params.fromAddress, index = params.index, toAddress = params.toAddress, amount = params.amount, id = params.id, decimals = params.decimals, TokenName = params.TokenName;
+                fromAddress = params.fromAddress, index = params.index, toAddress = params.toAddress, amount = params.amount, id = params.id, decimals = params.decimals, TokenName = params.TokenName, addressIndex = params.addressIndex;
                 _context21.next = 3;
-                return this.isCorrectAddress(replyAction, fromAddress, index);
+                return this.isCorrectAddress(replyAction, fromAddress, index, addressIndex);
 
               case 3:
                 if (_context21.sent) {
@@ -2062,7 +2065,7 @@ function () {
                   amount: amount
                 };
                 _context21.next = 13;
-                return tronWeb.trx.sign(unSignTransaction, index)["catch"](function (error) {
+                return tronWeb.trx.sign(unSignTransaction, index, addressIndex)["catch"](function (error) {
                   return {
                     result: error ? false : true,
                     error: error
@@ -2107,7 +2110,7 @@ function () {
         }, _callee21, this);
       }));
 
-      function sendTrc20(_x26, _x27) {
+      function sendTrc20(_x27, _x28) {
         return _sendTrc2.apply(this, arguments);
       }
 
@@ -2119,14 +2122,14 @@ function () {
       var _sendTrc3 = asyncToGenerator_default()(
       /*#__PURE__*/
       regenerator_default.a.mark(function _callee22(replyAction, params) {
-        var fromAddress, index, toAddress, amount, id, decimals, TokenName, unSignTransaction, signedTransaction, broadcast;
+        var fromAddress, index, toAddress, amount, id, decimals, TokenName, addressIndex, unSignTransaction, signedTransaction, broadcast;
         return regenerator_default.a.wrap(function _callee22$(_context22) {
           while (1) {
             switch (_context22.prev = _context22.next) {
               case 0:
-                fromAddress = params.fromAddress, index = params.index, toAddress = params.toAddress, amount = params.amount, id = params.id, decimals = params.decimals, TokenName = params.TokenName;
+                fromAddress = params.fromAddress, index = params.index, toAddress = params.toAddress, amount = params.amount, id = params.id, decimals = params.decimals, TokenName = params.TokenName, addressIndex = params.addressIndex;
                 _context22.next = 3;
-                return this.isCorrectAddress(replyAction, fromAddress, index);
+                return this.isCorrectAddress(replyAction, fromAddress, index, addressIndex);
 
               case 3:
                 if (_context22.sent) {
@@ -2165,7 +2168,7 @@ function () {
                   amount: amount
                 };
                 _context22.next = 13;
-                return tronWeb.trx.sign(unSignTransaction, index)["catch"](function (error) {
+                return tronWeb.trx.sign(unSignTransaction, index, addressIndex)["catch"](function (error) {
                   return {
                     result: error ? false : true,
                     error: error
@@ -2210,7 +2213,7 @@ function () {
         }, _callee22, this);
       }));
 
-      function sendTrc721(_x28, _x29) {
+      function sendTrc721(_x29, _x30) {
         return _sendTrc3.apply(this, arguments);
       }
 
@@ -2282,7 +2285,7 @@ function () {
         }, _callee23, this, [[3, 10]]);
       }));
 
-      function getAccount(_x30, _x31) {
+      function getAccount(_x31, _x32) {
         return _getAccount.apply(this, arguments);
       }
 
@@ -4450,7 +4453,6 @@ class Trx {
 
 }
 //# sourceMappingURL=Trx.js.map
-
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../buffer/index.js */ "./node_modules/buffer/index.js").Buffer))
 
 /***/ }),
